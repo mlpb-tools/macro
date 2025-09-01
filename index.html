@@ -3,320 +3,963 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schéma Organisationnel Territorial</title>
+    <title>Tutoriel - Fiche d'évaluation Aide au Permis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .territory-block {
+        .step-card {
             transition: all 0.3s ease;
-            cursor: pointer;
+            border-left: 4px solid #3b82f6;
         }
-        .territory-block:hover {
+        .step-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
-        .dashed-block {
-            border: 2px dashed #9ca3af;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(156, 163, 175, 0.1) 10px,
-                rgba(156, 163, 175, 0.1) 20px
-            );
+        .progress-bar {
+            transition: width 0.5s ease;
         }
-        .modal {
-            display: none;
-            animation: fadeIn 0.3s ease;
+        .icon-bounce {
+            animation: bounce 2s infinite;
         }
-        .modal.active {
-            display: flex;
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 auto 16px;
-        }
-        .specialty-checkbox {
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #d1d5db;
-            border-radius: 4px;
-            position: relative;
-            cursor: pointer;
-        }
-        .specialty-checkbox:checked {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
-        .specialty-checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen p-6">
-    <div class="max-w-6xl mx-auto">
-        <!-- Direction -->
-        <div class="flex justify-center mb-12">
-            <div class="territory-block bg-gradient-to-r from-gray-700 to-gray-900 text-white p-6 rounded-xl shadow-lg w-80 text-center" onclick="openModal('direction')">
-                <h3 class="text-xl font-bold mb-2">🏢 DIRECTION</h3>
-                <p class="text-gray-300 text-sm">Cliquez pour voir le profil</p>
-            </div>
-        </div>
-
-        <!-- Niveau principal -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-12">
-            <!-- Responsable labellisation -->
-            <div class="flex flex-col items-center">
-                <div class="territory-block bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-xl shadow-lg w-full text-center" onclick="openModal('labellisation')">
-                    <h3 class="text-lg font-bold mb-2">📋 RESPONSABLE</h3>
-                    <p class="text-sm mb-1">Labellisation et</p>
-                    <p class="text-sm">Coaching Accompagnement</p>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="text-4xl icon-bounce">🚗</div>
+                    <div>
+                        <h1 class="text-2xl font-bold">Tutoriel - Compléter la fiche d'évaluation</h1>
+                        <p class="text-blue-100">Aide au Permis de Conduire</p>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Coordinateur Innovation -->
-            <div class="flex flex-col items-center">
-                <div class="territory-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-xl shadow-lg w-full text-center" onclick="openModal('rio')">
-                    <h3 class="text-lg font-bold mb-2">🎯 COORDINATEUR</h3>
-                    <p class="text-sm mb-1">Innovation et</p>
-                    <p class="text-sm">Outillage</p>
-                </div>
-            </div>
-
-            <!-- Chargé de projet Citoyenneté -->
-            <div class="flex flex-col items-center">
-                <div class="territory-block bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-lg w-full text-center" onclick="openModal('numerique')">
-                    <h3 class="text-lg font-bold mb-2">💻 CHARGÉ DE PROJET</h3>
-                    <p class="text-sm mb-1">Citoyenneté</p>
-                    <p class="text-sm">Numérique</p>
-                </div>
-            </div>
-
-            <!-- Coordinateur Transfrontalier -->
-            <div class="flex flex-col items-center">
-                <div class="territory-block dashed-block bg-white p-6 rounded-xl shadow-lg w-full text-center text-gray-700" onclick="openModal('transfrontalier')">
-                    <h3 class="text-lg font-bold mb-2">🌍 COORDINATEUR</h3>
-                    <p class="text-sm mb-1">Transfrontalier</p>
-                    <p class="text-sm text-gray-500">(Éventuel)</p>
+                <div class="text-right">
+                    <p class="text-sm text-blue-100">Guide pas à pas</p>
+                    <p class="text-xs text-blue-200">Pour un dossier complet et motivé</p>
                 </div>
             </div>
         </div>
+    </header>
 
-        <!-- Ambassadeurs territoriaux -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- BAB Nord -->
-            <div class="territory-block bg-gradient-to-br from-blue-500 to-blue-700 text-white p-6 rounded-xl shadow-lg text-center" onclick="openModal('bab-nord')">
-                <h3 class="text-lg font-bold mb-2">🌊 AMBASSADEUR</h3>
-                <p class="text-blue-100 font-semibold">BAB NORD</p>
+    <!-- Progress Bar -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">Progression</span>
+                <span class="text-sm text-gray-500" id="progress-text">Étape 0 sur 8</span>
             </div>
-
-            <!-- BAB Sud -->
-            <div class="territory-block bg-gradient-to-br from-orange-500 to-red-600 text-white p-6 rounded-xl shadow-lg text-center" onclick="openModal('bab-sud')">
-                <h3 class="text-lg font-bold mb-2">🏙️ AMBASSADEUR</h3>
-                <p class="text-orange-100 font-semibold">BAB SUD</p>
-            </div>
-
-            <!-- Sud Pays Basque -->
-            <div class="territory-block bg-gradient-to-br from-green-500 to-emerald-700 text-white p-6 rounded-xl shadow-lg text-center" onclick="openModal('sud-pb')">
-                <h3 class="text-lg font-bold mb-2">🌿 AMBASSADEUR</h3>
-                <p class="text-green-100 font-semibold">SUD PAYS BASQUE</p>
-            </div>
-
-            <!-- PBI -->
-            <div class="territory-block bg-gradient-to-br from-teal-500 to-cyan-700 text-white p-6 rounded-xl shadow-lg text-center" onclick="openModal('pbi')">
-                <h3 class="text-lg font-bold mb-2">⚡ AMBASSADEUR</h3>
-                <p class="text-teal-100 font-semibold">PBI</p>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="progress-bar bg-blue-600 h-2 rounded-full" id="progress-bar" style="width: 0%"></div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="text-center mb-6">
-                <div id="modal-avatar" class="avatar"></div>
-                <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                <p id="modal-subtitle" class="text-gray-600"></p>
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Nom</label>
-                <input type="text" id="modal-nom" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Entrez le nom">
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Prénom</label>
-                <input type="text" id="modal-prenom" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Entrez le prénom">
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-3">Spécialités</label>
-                <div class="space-y-3">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="mobilite-territoriale">
-                        <span class="text-gray-700">Mobilité territoriale</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="mobilite-internationale">
-                        <span class="text-gray-700">Mobilité internationale</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="transfrontalier">
-                        <span class="text-gray-700">Transfrontalier</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="ls4you">
-                        <span class="text-gray-700">LS4YOU</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="roaming">
-                        <span class="text-gray-700">ROAMING</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="citoyennete">
-                        <span class="text-gray-700">Citoyenneté</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" class="specialty-checkbox" data-specialty="transition-sociale">
-                        <span class="text-gray-700">Transition sociale</span>
-                    </label>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Page de couverture -->
+        <div id="cover-page" class="text-center py-16 fade-in">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-8xl mb-6">🎯</div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 border-b-4 border-blue-600 inline-block pb-2">
+                    Tutoriel Interactif
+                </h2>
+                <h3 class="text-2xl text-gray-600 mb-6">
+                    Compléter la fiche d'évaluation : Aide au Permis
+                </h3>
+                <p class="text-lg text-gray-500 mb-8">
+                    Un guide pas à pas pour un dossier complet, clair et motivé
+                </p>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                    <div class="flex items-center justify-center space-x-4 mb-4">
+                        <span class="text-2xl">📋</span>
+                        <span class="text-2xl">➜</span>
+                        <span class="text-2xl">✅</span>
+                    </div>
+                    <p class="text-gray-700">
+                        Ce tutoriel vous accompagne dans chaque étape de la constitution d'un dossier d'aide au permis de conduire
+                    </p>
                 </div>
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Détails et commentaires</label>
-                <textarea id="modal-commentaires" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" placeholder="Ajoutez des détails sur le profil, les missions spécifiques, les projets en cours..."></textarea>
-            </div>
-
-            <div class="flex justify-center">
-                <button onclick="closeModal()" class="bg-gray-500 text-white py-3 px-8 rounded-lg hover:bg-gray-600 transition-colors font-semibold">
-                    Fermer
+                <button onclick="startTutorial()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg">
+                    Commencer le tutoriel
                 </button>
+            </div>
+        </div>
+
+        <!-- Étapes du tutoriel -->
+        <div id="tutorial-content" class="hidden">
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mb-8">
+                <button onclick="previousStep()" id="prev-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50" disabled>
+                    ← Précédent
+                </button>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-800" id="step-title">Étape 1</h3>
+                </div>
+                <button onclick="nextStep()" id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    Suivant →
+                </button>
+            </div>
+
+            <!-- Contenu des étapes -->
+            <div id="step-content" class="fade-in">
+                <!-- Le contenu sera généré dynamiquement -->
             </div>
         </div>
     </div>
 
     <script>
-        const profiles = {
-            'direction': {
-                title: 'DIRECTION',
-                subtitle: 'Direction générale',
-                avatar: 'DIR',
-                defaultSpecialties: []
+        let currentStep = 0;
+        const totalSteps = 8;
+
+        const steps = [
+            {
+                title: "Étape 1 – Informations générales",
+                icon: "📝",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">📝</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Informations générales</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-gray-800 mb-3">✅ À compléter obligatoirement :</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-start">
+                                        <span class="text-blue-600 mr-2">•</span>
+                                        <span><strong>Coordonnées complètes du jeune</strong> : nom, prénom, adresse, téléphone, email</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-blue-600 mr-2">•</span>
+                                        <span><strong>Conseiller référent</strong> : nom, structure, coordonnées</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-blue-600 mr-2">•</span>
+                                        <span><strong>Projet professionnel nécessitant le permis</strong></span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-green-600 text-xl mr-2">💡</span>
+                                    <h5 class="font-semibold text-green-800">Astuce professionnelle</h5>
+                                </div>
+                                <p class="text-green-700">
+                                    <strong>Lier le projet à une fiche de poste ou une offre concrète</strong> pour étayer la nécessité du permis. 
+                                    Cela renforce considérablement la demande !
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <h5 class="font-semibold text-yellow-800 mb-2">⚠️ Points de vigilance :</h5>
+                                <ul class="text-yellow-700 space-y-1">
+                                    <li>• Vérifier que toutes les coordonnées sont à jour</li>
+                                    <li>• S'assurer que le projet professionnel est réaliste et documenté</li>
+                                    <li>• Joindre si possible la fiche de poste ou l'offre d'emploi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'rio': {
-                title: 'COORDINATEUR',
-                subtitle: 'Innovation et Outillage',
-                avatar: 'CIO',
-                defaultSpecialties: ['mobilite-territoriale', 'mobilite-internationale', 'ls4you']
+            {
+                title: "Étape 2 – Préparation du code de la route",
+                icon: "📚",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">📚</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Préparation du code de la route</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-3">📋 Informations à renseigner :</h4>
+                                    <ul class="space-y-2 text-gray-700">
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>Code obtenu ?</strong> Oui/Non + date si obtenu</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>N° NEPH</strong> (disponible sur ANTS)</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>Modalités :</strong> candidat libre ou auto-école</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <span class="text-orange-600 text-xl mr-2">⏳</span>
+                                        <h5 class="font-semibold text-orange-800">Rappel important</h5>
+                                    </div>
+                                    <p class="text-orange-700">
+                                        <strong>Le code est valide 18 mois après obtention.</strong>
+                                        Vérifier la date de validité !
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <h5 class="font-semibold text-gray-800 mb-3">🔍 Si le code n'est pas obtenu :</h5>
+                                <div class="space-y-2 text-gray-700">
+                                    <p><strong>Justifier pourquoi :</strong></p>
+                                    <ul class="ml-4 space-y-1">
+                                        <li>• Difficultés de compréhension</li>
+                                        <li>• Problèmes financiers pour la préparation</li>
+                                        <li>• Échecs précédents et besoin d'accompagnement</li>
+                                        <li>• Préparation en cours (préciser où et quand)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'labellisation': {
-                title: 'RESPONSABLE',
-                subtitle: 'Labellisation et Coaching',
-                avatar: 'LAB',
-                defaultSpecialties: ['citoyennete', 'transition-sociale']
+            {
+                title: "Étape 3 – Préparation à la conduite pratique",
+                icon: "🚗",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🚗</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Préparation à la conduite pratique</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-gray-800 mb-3">📊 Évaluation et heures de conduite :</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="w-4 h-4 bg-blue-600 rounded-full"></span>
+                                        <span><strong>Heure d'évaluation réalisée ?</strong> Oui/Non</span>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="w-4 h-4 bg-blue-600 rounded-full"></span>
+                                        <span><strong>Nombre d'heures de conduite déjà effectuées</strong></span>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="w-4 h-4 bg-blue-600 rounded-full"></span>
+                                        <span><strong>Auto-école choisie</strong> (nom et coordonnées)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-green-600 text-xl mr-2">📎</span>
+                                    <h5 class="font-semibold text-green-800">Document à joindre</h5>
+                                </div>
+                                <p class="text-green-700">
+                                    <strong>Attestation de l'auto-école</strong> précisant le nombre d'heures effectuées 
+                                    et le niveau du candidat (si disponible).
+                                </p>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <h5 class="font-semibold text-yellow-800 mb-2">⚠️ Si aucune heure effectuée :</h5>
+                                    <ul class="text-yellow-700 space-y-1 text-sm">
+                                        <li>• Expliquer pourquoi (financier, organisationnel...)</li>
+                                        <li>• Préciser le planning prévu</li>
+                                        <li>• Mentionner l'auto-école contactée</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                    <h5 class="font-semibold text-purple-800 mb-2">💡 Conseils :</h5>
+                                    <ul class="text-purple-700 space-y-1 text-sm">
+                                        <li>• Privilégier les auto-écoles partenaires</li>
+                                        <li>• Vérifier les tarifs et modalités</li>
+                                        <li>• Prévoir un planning réaliste</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'numerique': {
-                title: 'CHARGÉ DE PROJET',
-                subtitle: 'Citoyenneté Numérique',
-                avatar: 'NUM',
-                defaultSpecialties: ['citoyennete']
+            {
+                title: "Étape 4 – Freins et sécurisation du parcours",
+                icon: "🛡️",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🛡️</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Freins éventuels et sécurisation</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-gray-800 mb-3">🚫 Identifier les freins :</h4>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <h5 class="font-medium text-red-800 mb-2">Sociaux</h5>
+                                        <ul class="text-sm text-red-700 space-y-1">
+                                            <li>• Isolement</li>
+                                            <li>• Problèmes familiaux</li>
+                                            <li>• Logement précaire</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-red-800 mb-2">Administratifs</h5>
+                                        <ul class="text-sm text-red-700 space-y-1">
+                                            <li>• Papiers manquants</li>
+                                            <li>• Dettes</li>
+                                            <li>• Situation irrégulière</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-red-800 mb-2">Psychologiques</h5>
+                                        <ul class="text-sm text-red-700 space-y-1">
+                                            <li>• Stress, anxiété</li>
+                                            <li>• Manque de confiance</li>
+                                            <li>• Échecs antérieurs</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-gray-800 mb-3">✅ Solutions proposées :</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <ul class="space-y-2 text-green-700">
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Mobilisation FAJ</strong> (Fonds d'Aide aux Jeunes)</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Coaching mobilité</strong></span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Accompagnement psychologique</strong></span>
+                                        </li>
+                                    </ul>
+                                    <ul class="space-y-2 text-green-700">
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Aide administrative</strong></span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Soutien familial/social</strong></span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-600 mr-2">•</span>
+                                            <span><strong>Planning adapté</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-blue-600 text-xl mr-2">🔍</span>
+                                    <h5 class="font-semibold text-blue-800">Disponibilité du jeune</h5>
+                                </div>
+                                <p class="text-blue-700 mb-2">
+                                    <strong>Préciser la disponibilité réelle :</strong>
+                                </p>
+                                <ul class="text-blue-700 space-y-1 ml-4">
+                                    <li>• Créneaux horaires disponibles</li>
+                                    <li>• Contraintes personnelles ou professionnelles</li>
+                                    <li>• Motivation et engagement dans le projet</li>
+                                </ul>
+                                <div class="mt-3 p-3 bg-blue-100 rounded">
+                                    <p class="text-sm text-blue-800">
+                                        <strong>Objectif :</strong> Montrer que le projet est réaliste et bien accompagné
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'transfrontalier': {
-                title: 'COORDINATEUR TRANSFRONTALIER',
-                subtitle: 'Coordination Transfrontalière (Éventuel)',
-                avatar: 'CTF',
-                defaultSpecialties: ['transfrontalier', 'mobilite-internationale']
+            {
+                title: "Étape 5 – Plan de financement",
+                icon: "💰",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">💰</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Plan de financement</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-3">💵 Ressources actuelles :</h4>
+                                    <ul class="space-y-2 text-green-700">
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            <span><strong>ARE</strong> (Allocation Retour à l'Emploi)</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            <span><strong>RSA</strong> (Revenu de Solidarité Active)</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            <span><strong>PACEA</strong> (Parcours Accompagnement)</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                            <span><strong>CEJ</strong> (Contrat Engagement Jeune)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-3">💸 Dépenses engagées :</h4>
+                                    <ul class="space-y-2 text-orange-700">
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                            <span>Code de la route</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                            <span>Évaluation de conduite</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                            <span>Heures de conduite déjà prises</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                            <span>Frais administratifs</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-3">🤝 Autres financements :</h4>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <h5 class="font-medium text-blue-800 mb-2">Sollicités</h5>
+                                        <ul class="text-sm text-blue-700 space-y-1">
+                                            <li>• CPF (Compte Personnel Formation)</li>
+                                            <li>• FAJ (Fonds d'Aide aux Jeunes)</li>
+                                            <li>• CAF (aide exceptionnelle)</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-blue-800 mb-2">Obtenus</h5>
+                                        <ul class="text-sm text-blue-700 space-y-1">
+                                            <li>• Montants accordés</li>
+                                            <li>• Dates de versement</li>
+                                            <li>• Conditions d'utilisation</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-blue-800 mb-2">En attente</h5>
+                                        <ul class="text-sm text-blue-700 space-y-1">
+                                            <li>• Dossiers déposés</li>
+                                            <li>• Délais de réponse</li>
+                                            <li>• Montants espérés</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-yellow-600 text-xl mr-2">📊</span>
+                                    <h5 class="font-semibold text-yellow-800">Reste à charge</h5>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="text-yellow-700">
+                                        <strong>Évaluer le reste à charge et sa couverture :</strong>
+                                    </p>
+                                    <ul class="text-yellow-700 space-y-1 ml-4">
+                                        <li>• Coût total estimé du permis</li>
+                                        <li>• Financements déjà acquis</li>
+                                        <li>• Montant restant à financer</li>
+                                        <li>• Capacité de paiement du jeune</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-purple-600 text-xl mr-2">💡</span>
+                                    <h5 class="font-semibold text-purple-800">Conseil professionnel</h5>
+                                </div>
+                                <p class="text-purple-700">
+                                    <strong>Compléter par un plan de financement chiffré clair</strong> avec un tableau 
+                                    détaillant toutes les ressources et dépenses. Cela facilite l'instruction du dossier.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'bab-nord': {
-                title: 'AMBASSADEUR BAB NORD',
-                subtitle: 'Territoire BAB Nord',
-                avatar: 'BN',
-                defaultSpecialties: ['mobilite-territoriale', 'ls4you']
+            {
+                title: "Étape 6 – Argumentaire et parcours détaillé",
+                icon: "📋",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">📋</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Argumentaire et parcours détaillé</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-3">🎓 Profil du jeune :</h4>
+                                    <ul class="space-y-2 text-blue-700">
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>Niveau scolaire</strong> atteint</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>Date du dernier diplôme</strong> obtenu</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-blue-600 mr-2">•</span>
+                                            <span><strong>Date de début</strong> de l'accompagnement ML</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-3">🚀 Actions d'insertion menées :</h4>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <h5 class="font-medium text-green-800">Immersions :</h5>
+                                            <ul class="text-sm text-green-700 ml-3">
+                                                <li>• Stages, PMSMP, ateliers</li>
+                                                <li>• Visites d'entreprises</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-medium text-green-800">Formation :</h5>
+                                            <ul class="text-sm text-green-700 ml-3">
+                                                <li>• Formations suivies</li>
+                                                <li>• Recherche active d'emploi</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-3">💪 Freins levés et engagement :</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h5 class="font-medium text-purple-800 mb-2">Freins levés :</h5>
+                                        <ul class="text-sm text-purple-700 space-y-1">
+                                            <li>• Problèmes administratifs résolus</li>
+                                            <li>• Difficultés sociales surmontées</li>
+                                            <li>• Confiance en soi retrouvée</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-purple-800 mb-2">Engagement du jeune :</h5>
+                                        <ul class="text-sm text-purple-700 space-y-1">
+                                            <li>• Assiduité aux rendez-vous</li>
+                                            <li>• Proactivité dans les démarches</li>
+                                            <li>• Motivation pour le projet</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-3">🎯 Justification de la nécessité :</h4>
+                                <div class="space-y-3">
+                                    <p class="text-orange-700">
+                                        <strong>Expliquer pourquoi le permis est indispensable au projet :</strong>
+                                    </p>
+                                    <ul class="text-orange-700 space-y-1 ml-4">
+                                        <li>• Nature du poste visé (déplacements, horaires...)</li>
+                                        <li>• Zone géographique de recherche</li>
+                                        <li>• Absence de transports en commun adaptés</li>
+                                        <li>• Opportunités d'emploi conditionnées au permis</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-3">🌍 Contexte social et territorial :</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h5 class="font-medium text-red-800 mb-2">Situation géographique :</h5>
+                                        <ul class="text-sm text-red-700 space-y-1">
+                                            <li>• Zone rurale isolée</li>
+                                            <li>• QPV (Quartier Prioritaire Ville)</li>
+                                            <li>• ZRR (Zone de Revitalisation Rurale)</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-red-800 mb-2">Difficultés de mobilité :</h5>
+                                        <ul class="text-sm text-red-700 space-y-1">
+                                            <li>• Transports en commun insuffisants</li>
+                                            <li>• Horaires inadaptés</li>
+                                            <li>• Coût des transports alternatifs</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-gray-600 text-xl mr-2">📎</span>
+                                    <h5 class="font-semibold text-gray-800">Annexes recommandées</h5>
+                                </div>
+                                <p class="text-gray-700">
+                                    Ajouter si possible une annexe détaillant toutes les actions réalisées 
+                                    avec dates et résultats pour renforcer l'argumentaire.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'bab-sud': {
-                title: 'AMBASSADEUR BAB SUD',
-                subtitle: 'Territoire BAB Sud',
-                avatar: 'BS',
-                defaultSpecialties: ['mobilite-territoriale', 'roaming']
+            {
+                title: "Étape 7 – Critères de priorisation",
+                icon: "🎯",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🎯</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Critères de priorisation</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                <p class="text-blue-800 font-medium">
+                                    <span class="text-xl mr-2">⚠️</span>
+                                    Chaque critère doit être illustré d'un fait ou d'une situation précise
+                                </p>
+                            </div>
+
+                            <div class="grid gap-4">
+                                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-2xl mr-3">🌍</span>
+                                        <h4 class="font-semibold text-gray-800">Zone rurale ou QPV sans solution de transport</h4>
+                                    </div>
+                                    <div class="ml-8">
+                                        <p class="text-green-700 mb-2"><strong>À préciser :</strong></p>
+                                        <ul class="text-green-700 space-y-1 text-sm">
+                                            <li>• Distance exacte des transports en commun</li>
+                                            <li>• Fréquence et horaires inadaptés</li>
+                                            <li>• Coût prohibitif des alternatives (taxi, VTC...)</li>
+                                            <li>• Impact sur l'accès à l'emploi dans la zone</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-2xl mr-3">💼</span>
+                                        <h4 class="font-semibold text-gray-800">Projet nécessitant obligatoirement le permis</h4>
+                                    </div>
+                                    <div class="ml-8">
+                                        <p class="text-blue-700 mb-2"><strong>À documenter :</strong></p>
+                                        <ul class="text-blue-700 space-y-1 text-sm">
+                                            <li>• Fiche de poste mentionnant le permis B obligatoire</li>
+                                            <li>• Secteur d'activité nécessitant des déplacements</li>
+                                            <li>• Offres d'emploi concrètes conditionnées au permis</li>
+                                            <li>• Formation professionnelle exigeant la mobilité</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-2xl mr-3">💪</span>
+                                        <h4 class="font-semibold text-gray-800">Implication du jeune dans les démarches</h4>
+                                    </div>
+                                    <div class="ml-8">
+                                        <p class="text-purple-700 mb-2"><strong>Preuves d'engagement :</strong></p>
+                                        <ul class="text-purple-700 space-y-1 text-sm">
+                                            <li>• Assiduité aux rendez-vous (taux de présence)</li>
+                                            <li>• Démarches autonomes effectuées</li>
+                                            <li>• Participation active aux ateliers/formations</li>
+                                            <li>• Recherches d'emploi documentées</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-2xl mr-3">🚫</span>
+                                        <h4 class="font-semibold text-gray-800">Freins sociaux/financiers bloquants</h4>
+                                    </div>
+                                    <div class="ml-8">
+                                        <p class="text-orange-700 mb-2"><strong>Situations à détailler :</strong></p>
+                                        <ul class="text-orange-700 space-y-1 text-sm">
+                                            <li>• Ressources insuffisantes (montants précis)</li>
+                                            <li>• Isolement social ou géographique</li>
+                                            <li>• Charges familiales importantes</li>
+                                            <li>• Absence totale d'autres solutions de financement</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-2xl mr-3">⏰</span>
+                                        <h4 class="font-semibold text-gray-800">Urgence liée à une opportunité professionnelle</h4>
+                                    </div>
+                                    <div class="ml-8">
+                                        <p class="text-red-700 mb-2"><strong>Opportunités concrètes :</strong></p>
+                                        <ul class="text-red-700 space-y-1 text-sm">
+                                            <li>• Offre d'emploi avec date limite précise</li>
+                                            <li>• Formation professionnelle débutant prochainement</li>
+                                            <li>• Contrat d'apprentissage conditionné au permis</li>
+                                            <li>• Période d'essai ou stage nécessitant la mobilité</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-yellow-600 text-xl mr-2">💡</span>
+                                    <h5 class="font-semibold text-yellow-800">Conseil pour maximiser les chances</h5>
+                                </div>
+                                <p class="text-yellow-700">
+                                    <strong>Plus vous documentez précisément chaque critère avec des faits concrets, 
+                                    plus le dossier sera convaincant.</strong> Évitez les généralités, privilégiez 
+                                    les exemples chiffrés et les preuves tangibles.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `
             },
-            'sud-pb': {
-                title: 'AMBASSADEUR SUD PB',
-                subtitle: 'Territoire Sud Pays Basque',
-                avatar: 'SPB',
-                defaultSpecialties: ['mobilite-territoriale', 'transfrontalier']
-            },
-            'pbi': {
-                title: 'AMBASSADEUR PBI',
-                subtitle: 'Territoire PBI',
-                avatar: 'PBI',
-                defaultSpecialties: ['roaming', 'ls4you']
+            {
+                title: "Étape 8 – Préconisations et plan d'action",
+                icon: "📌",
+                content: `
+                    <div class="step-card bg-white rounded-lg shadow-lg p-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">📌</span>
+                            <h3 class="text-2xl font-bold text-gray-800 border-b-2 border-blue-600 pb-1">Préconisations et plan d'action</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-gray-800 mb-4">🚀 Accompagnement renforcé proposé :</h4>
+                                
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="font-medium text-green-800 mb-3">Coaching mobilité :</h5>
+                                        <ul class="text-sm text-green-700 space-y-1">
+                                            <li>• Préparation psychologique à l'examen</li>
+                                            <li>• Gestion du stress et de l'anxiété</li>
+                                            <li>• Techniques de conduite adaptées</li>
+                                            <li>• Suivi personnalisé pendant l'apprentissage</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div>
+                                        <h5 class="font-medium text-green-800 mb-3">Tutorat permis :</h5>
+                                        <ul class="text-sm text-green-700 space-y-1">
+                                            <li>• Accompagnement aux démarches administratives</li>
+                                            <li>• Liaison avec l'auto-école</li>
+                                            <li>• Suivi des progrès et difficultés</li>
+                                            <li>• Soutien en cas d'échec</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">📋 Conditions de suivi post-financement :</h4>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-white rounded p-3 border-l-4 border-blue-400">
+                                        <h5 class="font-medium text-blue-800 mb-2">Suivi pendant l'apprentissage :</h5>
+                                        <ul class="text-sm text-blue-700 space-y-1">
+                                            <li>• Rendez-vous mensuels obligatoires</li>
+                                            <li>• Bilan d'étape avec l'auto-école</li>
+                                            <li>• Ajustement du planning si nécessaire</li>
+                                            <li>• Soutien en cas de difficultés</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded p-3 border-l-4 border-blue-400">
+                                        <h5 class="font-medium text-blue-800 mb-2">Après obtention du permis :</h5>
+                                        <ul class="text-sm text-blue-700 space-y-1">
+                                            <li>• Suivi de l'insertion professionnelle (6 mois)</li>
+                                            <li>• Accompagnement à la recherche d'emploi</li>
+                                            <li>• Aide à l'acquisition d'un véhicule si nécessaire</li>
+                                            <li>• Bilan d'impact de l'aide accordée</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800 mb-4">🎯 Objectifs et indicateurs de réussite :</h4>
+                                
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div class="bg-white rounded p-3">
+                                        <h5 class="font-medium text-purple-800 mb-2">Court terme (3 mois) :</h5>
+                                        <ul class="text-sm text-purple-700 space-y-1">
+                                            <li>• Code obtenu</li>
+                                            <li>• Heures de conduite démarrées</li>
+                                            <li>• Assiduité maintenue</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded p-3">
+                                        <h5 class="font-medium text-purple-800 mb-2">Moyen terme (6 mois) :</h5>
+                                        <ul class="text-sm text-purple-700 space-y-1">
+                                            <li>• Permis obtenu</li>
+                                            <li>• Recherche d'emploi active</li>
+                                            <li>• Candidatures envoyées</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded p-3">
+                                        <h5 class="font-medium text-purple-800 mb-2">Long terme (12 mois) :</h5>
+                                        <ul class="text-sm text-purple-700 space-y-1">
+                                            <li>• Emploi trouvé</li>
+                                            <li>• Autonomie mobilité</li>
+                                            <li>• Insertion réussie</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-yellow-600 text-xl mr-2">🔗</span>
+                                    <h5 class="font-semibold text-yellow-800">Inscription dans un parcours global</h5>
+                                </div>
+                                <p class="text-yellow-700 mb-3">
+                                    <strong>Montrer que l'aide s'inscrit dans un parcours global structuré :</strong>
+                                </p>
+                                <ul class="text-yellow-700 space-y-1 ml-4">
+                                    <li>• Lien avec le projet professionnel défini</li>
+                                    <li>• Cohérence avec les actions d'insertion menées</li>
+                                    <li>• Étape nécessaire vers l'autonomie</li>
+                                    <li>• Levier pour lever les freins à l'emploi</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center">
+                                <div class="text-4xl mb-4">🎉</div>
+                                <h4 class="text-xl font-bold text-gray-800 mb-2">Félicitations !</h4>
+                                <p class="text-gray-700 mb-4">
+                                    Vous avez maintenant tous les éléments pour constituer un dossier complet et convaincant.
+                                </p>
+                                <div class="bg-white rounded p-4 border-l-4 border-green-500">
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Rappel :</strong> Un dossier bien documenté avec des faits précis et un argumentaire solide 
+                                        maximise les chances d'obtenir le financement pour le jeune accompagné.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
             }
-        };
+        ];
 
-        let currentProfile = null;
-
-        function openModal(profileId) {
-            currentProfile = profileId;
-            const profile = profiles[profileId];
-            
-            document.getElementById('modal-title').textContent = profile.title;
-            document.getElementById('modal-subtitle').textContent = profile.subtitle;
-            document.getElementById('modal-avatar').textContent = profile.avatar;
-            
-            // Reset form
-            document.getElementById('modal-nom').value = '';
-            document.getElementById('modal-prenom').value = '';
-            document.getElementById('modal-commentaires').value = '';
-            
-            // Reset checkboxes
-            const checkboxes = document.querySelectorAll('.specialty-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = profile.defaultSpecialties.includes(checkbox.dataset.specialty);
-            });
-            
-            document.getElementById('modal').classList.add('active');
+        function startTutorial() {
+            document.getElementById('cover-page').classList.add('hidden');
+            document.getElementById('tutorial-content').classList.remove('hidden');
+            currentStep = 0;
+            showStep(currentStep);
+            updateProgress();
         }
 
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
+        function showStep(stepIndex) {
+            const stepContent = document.getElementById('step-content');
+            const stepTitle = document.getElementById('step-title');
+            
+            stepContent.innerHTML = steps[stepIndex].content;
+            stepTitle.textContent = steps[stepIndex].title;
+            
+            // Animation d'entrée
+            stepContent.classList.remove('fade-in');
+            setTimeout(() => {
+                stepContent.classList.add('fade-in');
+            }, 50);
+            
+            updateNavigation();
         }
 
-
-
-        // Fermer modal en cliquant à l'extérieur
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                showStep(currentStep);
+                updateProgress();
             }
-        });
+        }
 
-        // Fermer modal avec Escape
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentStep === 0;
+            
+            if (currentStep === totalSteps - 1) {
+                nextBtn.textContent = 'Terminer';
+                nextBtn.onclick = function() {
+                    alert('Tutoriel terminé ! Vous pouvez maintenant constituer votre dossier d\'aide au permis.');
+                };
+            } else {
+                nextBtn.textContent = 'Suivant →';
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `Étape ${currentStep + 1} sur ${totalSteps}`;
+        }
+
+        // Gestion du clavier
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
+            if (document.getElementById('tutorial-content').classList.contains('hidden')) return;
+            
+            if (e.key === 'ArrowLeft' && currentStep > 0) {
+                previousStep();
+            } else if (e.key === 'ArrowRight' && currentStep < totalSteps - 1) {
+                nextStep();
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97724aa8163323e6',t:'MTc1NjUzNTk3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9781b1202762ca0d',t:'MTc1NjY5NzQ1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
